@@ -1,5 +1,6 @@
-// Powered by Quotable
-// https://github.com/lukePeavey/quotable
+//https://www.geeksforgeeks.org/how-to-fetch-data-from-an-api-in-reactjs/
+//https://codepen.io/lukePeavey/pen/RwNVeQG
+//https://stackoverflow.com/questions/10841239/enabling-refreshing-for-specific-html-elements-only
 
 document.addEventListener("DOMContentLoaded", () => {
   // DOM elements
