@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-
+//use this https://codesandbox.io/p/sandbox/quotable-get-quotes-with-author-details-iyxw8?file=%2Fsrc%2Fapi.js
 const Quotes = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [isError, setIsError] = useState(false)
@@ -39,7 +39,7 @@ const Quotes = () => {
   return (
     <>
     <div>
-        <p>"{quotes.content}" -{quotes.author}</p>
+        <p>"{quotes.content}"</p><p> -{quotes.author}</p>
         <button style={{margin: "10rem", height: '50px', width:'80px', textAlign: 'center'}} className='btn' onClick={()=>{window.location.reload()}}>Reload Quotes</button>
     </div>
     </>
