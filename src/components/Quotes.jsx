@@ -1,19 +1,49 @@
-import React, { useState, useEffect } from "react";
+import {useState, useEffect} from 'react';
 
 const Quotes = () => {
+    const [isLoading, setIsLoading] = useState(true)
+    const [isError, setIsError] = useState(false)
+    const [quotes, setQuotes] = useState([])
     const url = "https://api.quotable.io/random";
-    const [data, setData] = useState([]);
-    const fetchInfo = () => { 
-    return fetch(url) 
-            .then((res) => res.json()) 
-            .then((d) => setData(d)) 
+ 
+    useEffect(() =>{
+        fetch(url).then((response) => {
+            if(response.status >= 200 && response.status <= 300) {
+                return response.json()
+            }else{
+                setIsLoading(false)
+                setIsError(true)
+                throw new Error(response.statusText)
+            }
+        }).then((data)=>{
+            setQuotes(data)
+            setIsLoading(false)
+        }).catch((error)=>{console.log(error)})
+    },[])
+
+    if(isLoading){
+        return(
+            <div>
+                <h1>Loading...</h1>
+            </div>
+        )
     }
-    useEffect(() => {
-        fetchInfo();
-    }, [])
-    return (
-        <div>Quotes</div>
-    )
+    if(isError){
+        return(
+            <div>
+                <h1>Error...</h1>
+            </div>
+        )
+    }
+
+  return (
+    <>
+    <div>
+        <p>"{quotes.content}" -{quotes.author}</p>
+        <button style={{margin: "10rem", height: '50px', width:'80px', textAlign: 'center'}} className='btn' onClick={()=>{window.location.reload()}}>Reload Quotes</button>
+    </div>
+    </>
+  )
 }
 
 export default Quotes
