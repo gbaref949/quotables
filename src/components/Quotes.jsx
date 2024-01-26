@@ -1,49 +1,73 @@
-import {useState, useEffect} from 'react';
-//use this https://codesandbox.io/p/sandbox/quotable-get-quotes-with-author-details-iyxw8?file=%2Fsrc%2Fapi.js
-const Quotes = () => {
-    const [isLoading, setIsLoading] = useState(true)
-    const [isError, setIsError] = useState(false)
-    const [quotes, setQuotes] = useState([])
-    const url = "https://api.quotable.io/random";
- 
-    useEffect(() =>{
-        fetch(url).then((response) => {
-            if(response.status >= 200 && response.status <= 300) {
-                return response.json()
-            }else{
-                setIsLoading(false)
-                setIsError(true)
-                throw new Error(response.statusText)
-            }
-        }).then((data)=>{
-            setQuotes(data)
-            setIsLoading(false)
-        }).catch((error)=>{console.log(error)})
-    },[])
+import React, { useState, useEffect } from 'react';
 
-    if(isLoading){
-        return(
-            <div>
-                <h1>Loading...</h1>
-            </div>
-        )
+const Quotes = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+  const [quotes, setQuotes] = useState([]);
+  const apiUrl = 'https://api.quotable.io/random';
+
+  const fetchQuote = async () => {
+    try {
+      const response = await fetch(apiUrl);
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch quote: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      setQuotes(data);
+    } catch (error) {
+      console.error(error);
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
     }
-    if(isError){
-        return(
-            <div>
-                <h1>Error...</h1>
-            </div>
-        )
-    }
+  };
+
+  useEffect(() => {
+    fetchQuote();
+  }, []);
+
+  const handleReload = () => {
+    setIsLoading(true);
+    setIsError(false);
+    fetchQuote();
+  };
+
+  if (isLoading) {
+    return (
+      <div>
+        <h1>Loading...</h1>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div>
+        <h1>Error fetching quote...</h1>
+      </div>
+    );
+  }
 
   return (
-    <>
     <div>
-        <p>"{quotes.content}"</p><p> -{quotes.author}</p>
-        <button style={{margin: "10rem", height: '50px', width:'80px', textAlign: 'center'}} className='btn' onClick={()=>{window.location.reload()}}>Reload Quotes</button>
+      <p>"{quotes.content}"</p>
+      <p>- {quotes.author}</p>
+      <button
+        style={{
+          margin: '10rem',
+          height: '50px',
+          width: '80px',
+          textAlign: 'center',
+        }}
+        className='btn'
+        onClick={handleReload}
+      >
+        Reload Quotes
+      </button>
     </div>
-    </>
-  )
-}
+  );
+};
 
-export default Quotes
+export default Quotes;
